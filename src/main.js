@@ -262,6 +262,27 @@ function createWindow() {
     }
   })
 
+  //Send buttons with standard OSC server IP and Port
+  ipcMain.on("send_buttons", (event, prefix, index, attr, value) => {
+    //console.log("Report back to GUI : ", prefix + "/" + index + attr + " " + value)//no return info to GUI
+    
+      oscCli.send({
+        timeTag: osc.timeTag(0), // Schedules this bundle 60 seconds from now.
+        packets: [{
+          address: prefix + "/" + index + attr,
+          args: [
+            {
+              type: "f",
+              value: value
+            }
+          ]
+        }
+        ]
+      }, OSCserverIP, OSCserverPort)
+    
+  })
+
+
   function oscListening() {
     oUDPport = preferences.value('network_settings.osc_receiver_port');
     const oscCli = new osc.UDPPort({
@@ -345,7 +366,7 @@ function createWindow() {
       }
       else {
 
-
+        
         //console.log(datas);
         console.log(translateX, translateY, translateZ, rotateX, rotateY, rotateZ)
         win.webContents.send("incoming_datas", translateX, translateY, translateZ, rotateX, rotateY, rotateZ)
@@ -380,6 +401,30 @@ function createWindow() {
     }
   });
 }
+
+//send buttons with OSCServer and IP configurable
+  //Send buttons with standard OSC server IP and Port
+  ipcMain.on("send_buttons", (event, prefix, index, attr, value,OSCserverIP, OSCserverPort) => {
+    //console.log("Report back to GUI : ", prefix + "/" + index + attr + " " + value)//no return info to GUI
+    
+      oscCli.send({
+        timeTag: osc.timeTag(0), // Schedules this bundle 60 seconds from now.
+        packets: [{
+          address: prefix + "/" + index + attr,
+          args: [
+            {
+              type: "f",
+              value: value
+            }
+          ]
+        }
+        ]
+      }, OSCserverIP, OSCserverPort)
+    
+  })
+
+
+
 
 app.whenReady().then(createWindow)
 

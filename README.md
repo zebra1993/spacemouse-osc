@@ -45,3 +45,13 @@ To use spacemouse-osc on linux OS you'll have to add UDEV rules. Create a `/etc/
 
 Then launch(as root) : `udevadm control --reload-rules`
 
+# Buttons (only tested with a Spacemouse Pro)
+In default, startup configuration, no changes.
+When [Index] is bybassed, button messages are sent aswell, index will not change while bypassed.
+OSC MSG: /button/bttn_ATTR VALUE
+Where ATTR is the Button pressed (refer to Button_Mapping.txt)
+And VALUE is either 0 (false) or 1 (true).
+
+Note: 
+The Number buttons (1-4) seem to be only momentary sending messages, not aslong as they are pressed (Firmware?).
+Due to setup, only 1-2 buttons should be pressed at the same time, Messages get sticky and you might encouter ghosting.

@@ -64,11 +64,29 @@ ipcRenderer.on('incoming_datas', (event, translateX, translateY, translateZ, rot
 })
 
 ipcRenderer.on("buttons", (event, buttons) => {
-  if (buttons[0] === true) {
-    document.getElementById("index").stepDown()
+  var index_or_not = document.getElementById("index").style.visibility
+  if (index_or_not == "visible") {//only change index when not bypassed, let user continue where they left off in index position.
+
+    if (buttons[0] === true) {
+      document.getElementById("index").stepDown()
+    }
+    if (buttons[1] === true) {
+      document.getElementById("index").stepUp()
+   }
   }
-  if (buttons[1] === true) {
-    document.getElementById("index").stepUp()
+  
+  if (index_or_not == "hidden") {//When index change with buttons is bypassed, send raw button states 
+    prefix = "/button"
+    index = "bttn_"
+    for (i = 0; i< buttons.length; i++){
+      //console.log("Button_", i);
+      attr = i;
+      value = buttons[i];
+      ipcRenderer.send("send_buttons", prefix, index, attr, value) //OSC MSG will be: /button/bttn_ATTR VALUE
+        if (value == true){//only geenrate Log output when button is pressed
+          console.log("Pressed Button: ",i);
+        }
+    }
   }
 })
 
